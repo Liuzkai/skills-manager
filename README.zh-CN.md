@@ -43,7 +43,7 @@
 
 ### Windows x64 验收包
 
-在 [Windows 验收构建](https://github.com/Liuzkai/skills-manager/actions/runs/45798262016)下载 ZIP，解压后运行 `skills-manager_1.45.0_x64-setup.exe`。提交 `0b6b732` 的构建产物包括未签名的安装包、便携版与 CLI，以及 SHA-256 校验和。[本分支的构建记录](https://github.com/Liuzkai/skills-manager/actions/workflows/windows-acceptance.yml?query=branch%3Acodex%2Frepository-skills)
+从预览版 Release 下载并运行 `skills-manager_1.45.0_x64-setup.exe`。预览版包含提交 `0b6b732` 对应的未签名安装包、便携版与 CLI，以及 SHA-256 校验和。[预览版 Release](https://github.com/Liuzkai/skills-manager/releases/tag/repository-skills-v1.45.0) · [Windows 构建记录](https://github.com/Liuzkai/skills-manager/actions/runs/45798262016)
 
 <p align="center">
   <img src="assets/demo/library.png" width="800" alt="Skills Manager 技能库" />

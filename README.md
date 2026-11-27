@@ -47,7 +47,7 @@ This branch builds on [xingkongliang/skills-manager at `8bce085`](https://github
 
 ### Windows x64 acceptance build
 
-Download the ZIP from the [Windows acceptance build](https://github.com/Liuzkai/skills-manager/actions/runs/45798262016), then run `skills-manager_1.45.0_x64-setup.exe`. The artifact for commit `0b6b732` includes the unsigned installer, portable app and CLI, and SHA-256 checksums. [Builds for this branch](https://github.com/Liuzkai/skills-manager/actions/workflows/windows-acceptance.yml?query=branch%3Acodex%2Frepository-skills)
+Download and run `skills-manager_1.45.0_x64-setup.exe` from the preview release. The release includes the unsigned installer, portable app and CLI, and SHA-256 checksums for commit `0b6b732`. [Preview release](https://github.com/Liuzkai/skills-manager/releases/tag/repository-skills-v1.45.0) · [Windows build](https://github.com/Liuzkai/skills-manager/actions/runs/45798262016)
 
 <p align="center">
   <img src="assets/demo/library.png" width="800" alt="Skills Manager Library" />
