@@ -1,0 +1,56 @@
+name: Publish Repository Skills Windows preview
+
+on:
+  push:
+    branches: [publish/repository-skills-v1.45.0]
+    paths: [.github/workflows/publish-repository-skills-preview.yml]
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    if: github.repository == 'Liuzkai/skills-manager'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BUILD_RUN: '45798262016'
+      BUILD_SHA: 0b6b732cdffdf22b8a091bb93a27f4abd2be128c
+      ARTIFACT_ID: '15108410998'
+      ARTIFACT_SHA256: 04f586e4e50e31f54ccecdd131bb868190385594f53281a551dcd90aca414d7c
+      RELEASE_TAG: repository-skills-v1.45.0
+    steps:
+      - name: Verify and download the acceptance build
+        shell: bash
+        run: |
+          run_metadata="$(gh api "repos/$GH_REPO/actions/runs/$BUILD_RUN" --jq '[.head_sha, .head_branch, .conclusion] | join(" ")')"
+          test "$run_metadata" = "$BUILD_SHA codex/repository-skills success"
+          gh api "repos/$GH_REPO/actions/artifacts/$ARTIFACT_ID/zip" > "$RUNNER_TEMP/acceptance.zip"
+          printf '%s  %s\n' "$ARTIFACT_SHA256" "$RUNNER_TEMP/acceptance.zip" | sha256sum --check
+          mkdir "$RUNNER_TEMP/windows-preview"
+          unzip -q "$RUNNER_TEMP/acceptance.zip" -d "$RUNNER_TEMP/windows-preview"
+          cd "$RUNNER_TEMP/windows-preview"
+          sha256sum --check SHA256SUMS.txt
+
+      - name: Publish the Windows preview
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP/windows-preview"
+          cat > release-notes.md <<'EOF'
+          Windows x64 预览版，包含仓库级一键启停、仓库收录，以及 Ponytail 和 OpenSpec 的安装交接。
+
+          - 下载 `skills-manager_1.45.0_x64-setup.exe` 安装。安装包未签名。
+          - 使用便携版时，将 `skills-manager.exe` 和 `skills-manager-cli.exe` 放在同一目录。
+          - `SHA256SUMS.txt` 提供三个 EXE 的校验和。
+
+          构建自提交 `0b6b732cdffdf22b8a091bb93a27f4abd2be128c`。[Windows CI 记录](https://github.com/Liuzkai/skills-manager/actions/runs/45798262016)
+          EOF
+          gh release create "$RELEASE_TAG" \
+            --target "$BUILD_SHA" \
+            --title 'Skills Manager 1.45.0 · Repository Skills Preview' \
+            --prerelease --notes-file release-notes.md \
+            skills-manager_1.45.0_x64-setup.exe skills-manager.exe skills-manager-cli.exe SHA256SUMS.txt
+          gh release view "$RELEASE_TAG" --json url --jq '.url' >> "$GITHUB_STEP_SUMMARY"
